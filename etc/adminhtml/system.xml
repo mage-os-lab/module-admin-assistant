@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="admin">
+            <group id="aiassistant" translate="label" type="text" sortOrder="3000" showInDefault="1">
+                <label>AI Assistant</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="provider" translate="label comment" type="select" sortOrder="20" showInDefault="1">
+                    <label>Provider</label>
+                    <source_model>MageOS\AdminAssist\Model\Config\Providers</source_model>
+                    <comment>Select the LLM(large language model) you wish to connect to</comment>
+                </field>
+                <field id="url" translate="label comment" type="text" sortOrder="30" showInDefault="1">
+                    <label>URL</label>
+                    <comment>Only required if you use a private or run your own LLM</comment>
+                </field>
+                <field id="api_key" translate="label comment" type="text" sortOrder="40" showInDefault="1">
+                    <label>API Key</label>
+                    <comment>Leave empty if the LLM does not require an API key</comment>
+                </field>
+                <field id="model" translate="label comment" type="text" sortOrder="50" showInDefault="1">
+                    <label>Model</label>
+                    <comment>The model of the LLM to run, e.g. `llama3.2` for Ollama, `GPT-4o` for OpenAI etc</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

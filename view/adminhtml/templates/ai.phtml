@@ -1,0 +1,88 @@
+<?php
+$endppint = $block->getEndpoint();
+?>
+<script
+    type="module"
+    src="https://unpkg.com/deep-chat@2.1.1/dist/deepChat.bundle.js"
+></script>
+<deep-chat id="ai-chat"
+    connect='{
+    "url": "<?php echo $endppint; ?>?isAjax=true&form_key=<?php echo $block->getFormKey(); ?>",
+    "method": "POST",
+    "stream": true
+  }'
+   errorMessages='{"displayServiceErrorMessages": true}'
+  introMessage='{"text": "Hi I am your assistant, ask me anything about managing a magento store!"}'
+  requestBodyLimits='{
+    "totalMessagesMaxCharLength": 10000,
+    "maxMessages": -1
+  }'
+  style="border-radius: 10px; border-color: #dcdcdc; background-color: #f3f6fc; font-size: 1.2em; width: 800px; height: 600px;"
+  textInput='{
+    "styles": {
+      "container": {"borderRadius": "20px", "border": "1px solid #969696", "boxShadow": "unset", "width": "78%", "marginLeft": "-15px"},
+      "text": {"padding": "10px", "paddingLeft": "15px", "paddingRight": "34px"}
+    },
+    "placeholder": {"text": "Enter a prompt here", "style": {"color": "#bcbcbc"}}
+  }'
+  messageStyles='{
+    "default": {
+      "shared": {"bubble": {"maxWidth": "100%", "backgroundColor": "unset", "marginTop": "10px", "marginBottom": "10px"}},
+      "user": {"bubble": {"marginLeft": "0px", "color": "black"}},
+      "ai": {"innerContainer": {"borderRadius": "15px", "backgroundColor": "white"}}
+    }
+  }'
+  avatars='{
+    "default": {
+      "styles": {"position": "left", "container": {"marginLeft": "12px", "marginRight": "5px"}}
+    },
+    "ai": {"src": "<?php echo $block->getViewFileUrl('images/mage-os-icon.svg');?>", "styles": {"position": "left", "avatar": {"paddingTop": "6px"}}}
+  }'
+  speechToText='{
+    "button": {
+      "default": {
+        "container": {"default": {"bottom": "1em", "right": "0.6em", "borderRadius": "20px", "width": "1.9em", "height": "1.9em"}},
+        "svg": {"styles": {"default": {"bottom": "0.35em", "left": "0.35em"}}}
+      },
+      "position": "inside-right"
+    }
+  }'
+  submitButtonStyles='{
+    "position": "outside-right",
+    "submit": {
+      "container": {
+        "default": {"bottom": "0.9em", "borderRadius": "25px", "padding": "6px 5px 4px", "backgroundColor": "#f3f6fc"},
+        "hover": {"backgroundColor": "#b0deff4f"},
+        "click": {"backgroundColor": "#b0deffb5"}
+      },
+      "svg": {
+        "content": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"m21.426 11.095-17-8A.999.999 0 0 0 3.03 4.242L4.969 12 3.03 19.758a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81zM5.481 18.197l.839-3.357L12 12 6.32 9.16l-.839-3.357L18.651 12l-13.17 6.197z\"/></svg>",
+        "styles": {
+          "default": {
+            "width": "1.5em",
+            "filter": "brightness(0) saturate(100%) invert(10%) sepia(86%) saturate(6044%) hue-rotate(205deg) brightness(100%) contrast(100%)"
+          }
+        }
+      }
+    },
+    "loading": {
+      "svg": {
+        "styles": {
+          "default": {
+            "filter": "brightness(0) saturate(100%) invert(72%) sepia(0%) saturate(3044%) hue-rotate(322deg) brightness(100%) contrast(96%)"
+          }
+        }
+      }
+    },
+    "stop": {
+      "container": {"hover": {"backgroundColor": "#ededed"}},
+      "svg": {
+        "styles": {
+          "default": {
+            "filter": "brightness(0) saturate(100%) invert(59%) sepia(0%) saturate(0%) hue-rotate(348deg) brightness(96%) contrast(93%)"
+          }
+        }
+      }
+    }
+  }'
+></deep-chat>
