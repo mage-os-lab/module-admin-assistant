@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace MageOS\AdminAssist\Model;
 
-use LLPhant\Chat\OllamaChatFactory;
-use LLPhant\Embeddings\EmbeddingGenerator\Ollama\OllamaEmbeddingGeneratorFactory;
 use LLPhant\Embeddings\VectorStores\OpenSearch\OpenSearchVectorStoreFactory;
-use LLPhant\OllamaConfig;
 use LLPhant\Query\SemanticSearch\QuestionAnsweringFactory;
 use MageOS\AdminAssist\Api\BotInterface;
 use OpenSearch\ClientBuilder;
@@ -22,15 +19,11 @@ class Bot implements BotInterface
     protected $client;
     protected $systemMessage;
     public function __construct(
-        OllamaConfig $ollamaConfig,
-        private OllamaChatFactory $ollamaChatFactory,
         private QuestionAnsweringFactory $questionAnsweringFactory,
         private OpenSearchVectorStoreFactory $openSearchVectorStoreFactory,
-        private OllamaEmbeddingGeneratorFactory $ollamaEmbeddingGeneratorFactory,
+        private LlmFactory $llmFactory,
     ){
-        $ollamaConfig->model = 'qwen2.5';
-        $ollamaConfig->url = "http://host.docker.internal:11434/api/";
-        $this->chat = $this->ollamaChatFactory->create([$ollamaConfig]);
+        $this->chat = $this->llmFactory->createChat();
         $this->systemMessage = 'You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.';
         $this->chat->setSystemMessage($this->systemMessage);
 
@@ -41,7 +34,7 @@ class Bot implements BotInterface
             ->setRetries(2)
             ->build();
         $this->vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $client, 'indexName' => self::INDEX_NAME]);;
-        $this->embeddingGenerator = $this->ollamaEmbeddingGeneratorFactory->create(['config' => $ollamaConfig]);
+        $this->embeddingGenerator = $this->llmFactory->createEmbedding();
     }
 
     public function generate(String $message): String

@@ -26,7 +26,7 @@ class Config
     }
     public function getProvider(): string
     {
-        return (string)$this->scopeConfig->isSetFlag(
+        return (string)$this->scopeConfig->getValue(
             self::XML_PATH_PROVIDER
         );
     }
