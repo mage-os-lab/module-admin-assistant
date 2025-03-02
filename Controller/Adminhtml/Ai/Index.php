@@ -1,12 +1,6 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 namespace MageOS\AdminAssist\Controller\Adminhtml\Ai;
 
-use LLPhant\OllamaConfig;
-use LLPhant\Chat\OllamaChatFactory;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 
 /**
@@ -19,22 +13,15 @@ class Index extends \Magento\Backend\App\Action implements HttpGetActionInterfac
      */
     protected $resultPageFactory;
 
-    protected $chat;
-
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        OllamaConfig $ollamaConfig,
-        private OllamaChatFactory $ollamaChatFactory
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory
     ) {
         $this->resultPageFactory = $resultPageFactory;
-        $ollamaConfig->model = 'llama3.2';
-        $ollamaConfig->url = "http://host.docker.internal:11434/api/";
-        $this->chat = $this->ollamaChatFactory->create([$ollamaConfig]);
         parent::__construct($context);
     }
 

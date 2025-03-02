@@ -11,12 +11,14 @@ use LLPhant\Embeddings\EmbeddingGenerator\Ollama\OllamaEmbeddingGeneratorFactory
 use LLPhant\Embeddings\EmbeddingGenerator\OpenAI\OpenAI3SmallEmbeddingGeneratorFactory;
 use LLPhant\OllamaConfig;
 use LLPhant\OpenAIConfig;
+use MageOS\AdminAssist\Model\Config;
+use MageOS\AdminAssist\Model\Config\Providers;
 
 class LlmFactory
 {
     public function __construct(
-        private readonly \MageOS\AdminAssist\Model\Config $config,
-        private readonly \MageOS\AdminAssist\Model\Config\Providers $providers,
+        private readonly Config $config,
+        private readonly Providers $providers,
         private OllamaConfig $ollamaConfig,
         private OllamaChatFactory $ollamaChatFactory,
         private OpenAIConfig $openAIConfig,
@@ -40,15 +42,18 @@ class LlmFactory
         $chat = null;
         $embedding = null;
         $provider = $this->config->getProvider();
-        if ($provider === \MageOS\AdminAssist\Model\Config\Providers::OLLAMA) {
+        if ($provider === Providers::OLLAMA) {
             $this->ollamaConfig->model = $this->config->getModel();
             $this->ollamaConfig->url = $this->config->getHost();
             $chat = $this->ollamaChatFactory->create([$this->ollamaConfig]);
             $embedding = $this->ollamaEmbeddingGeneratorFactory->create(['config' => $this->ollamaConfig]);
         }
-        else if ($provider === \MageOS\AdminAssist\Model\Config\Providers::OPENAI) {
+        else if ($provider === Providers::OPENAI) {
             $this->openAIConfig->model = $this->config->getModel();
             $this->openAIConfig->apiKey = $this->config->getApiKey();
+            if($host = $this->config->getHost()) {
+                $this->openAIConfig->url = $host;
+            }
             $chat = $this->openAIChatFactory->create([$this->openAIConfig]);
             $embedding = $this->openaiEmbeddingGeneratorFactory->create(['config' => $this->openAIConfig]);
         }

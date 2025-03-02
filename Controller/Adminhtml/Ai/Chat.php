@@ -1,24 +1,12 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 namespace MageOS\AdminAssist\Controller\Adminhtml\Ai;
 
 use LLPhant\Chat\Enums\ChatRole;
 use LLPhant\Chat\MessageFactory;
-use LLPhant\Embeddings\EmbeddingGenerator\Ollama\OllamaEmbeddingGeneratorFactory;
-use LLPhant\Embeddings\VectorStores\OpenSearch\OpenSearchVectorStoreFactory;
-use LLPhant\OllamaConfig;
-use LLPhant\Chat\OllamaChatFactory;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResourceConnection;
 use \Magento\Framework\Serialize\Serializer\Json;
-use LLPhant\Query\SemanticSearch\QuestionAnsweringFactory;
 use MageOS\AdminAssist\Model\Bot;
-use OpenSearch\ClientBuilder;
-use OpenSearch\Common\Exceptions\OpenSearchException;
-use MageOS\AdminAssist\Model\TextTableFactory;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -37,7 +25,6 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
     protected $answerFactory;
 
     protected $chat;
-    protected $embeddingGenerator;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
@@ -46,15 +33,9 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $answerFactory,
-        OllamaConfig $ollamaConfig,
-        private OllamaChatFactory $ollamaChatFactory,
-        private QuestionAnsweringFactory $questionAnsweringFactory,
-        private OpenSearchVectorStoreFactory $openSearchVectorStoreFactory,
-        private OllamaEmbeddingGeneratorFactory $ollamaEmbeddingGeneratorFactory,
         private MessageFactory $messageFactory,
         private Json $serializer,
         private ResourceConnection $resourceConnection,
-        private TextTableFactory $textTableFactory,
         private Bot $bot,
         private LoggerInterface $logger
     ) {
