@@ -14,9 +14,13 @@ use Psr\Http\Message\StreamInterface;
 
 class Bot implements BotInterface
 {
+    public const INDEX_NAME = 'assist_knowledge_index';
+
     protected $chat;
     protected $vectorStore;
     protected $embeddingGenerator;
+    protected $client;
+    protected $systemMessage;
     public function __construct(
         OllamaConfig $ollamaConfig,
         private OllamaChatFactory $ollamaChatFactory,
@@ -27,15 +31,16 @@ class Bot implements BotInterface
         $ollamaConfig->model = 'qwen2.5';
         $ollamaConfig->url = "http://host.docker.internal:11434/api/";
         $this->chat = $this->ollamaChatFactory->create([$ollamaConfig]);
-        $this->chat->setSystemMessage('You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.');
+        $this->systemMessage = 'You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.';
+        $this->chat->setSystemMessage($this->systemMessage);
 
 
         //TODO seperate elasticsearch dependency
-        $client = ClientBuilder::create()
+        $this->client = $client = ClientBuilder::create()
             ->setHosts(['http://search:9200'])
             ->setRetries(2)
             ->build();
-        $this->vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $client, 'indexName' => 'llphant_custom_index1']);;
+        $this->vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $client, 'indexName' => self::INDEX_NAME]);;
         $this->embeddingGenerator = $this->ollamaEmbeddingGeneratorFactory->create(['config' => $ollamaConfig]);
     }
 
@@ -51,7 +56,24 @@ class Bot implements BotInterface
             'embeddingGenerator' => $this->embeddingGenerator,
             'chat' => $this->chat,
         ]);
-        $qa->systemMessageTemplate = "You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.\n\n{context}.";
+        $qa->systemMessageTemplate = $this->systemMessage."\n\n{context}.";
         return $qa->answerQuestionFromChat($messages);
+    }
+
+    public function learn($documents, $forgetOldKnowledge = true)
+    {
+        if($forgetOldKnowledge) {
+            $this->client->indices()->delete([
+                'index' => self::INDEX_NAME,
+                'ignore_unavailable' => true
+            ]);
+
+            $this->vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $this->client, 'indexName' => self::INDEX_NAME]);;
+        }
+        $embeddedDocuments = $this->embeddingGenerator->embedDocuments($documents);
+
+        $this->vectorStore->addDocuments($embeddedDocuments);
+
+        return $this;
     }
 }
