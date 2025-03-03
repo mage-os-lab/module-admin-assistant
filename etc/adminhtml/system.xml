@@ -10,7 +10,7 @@
                 </field>
                 <field id="provider" translate="label comment" type="select" sortOrder="20" showInDefault="1">
                     <label>Provider</label>
-                    <source_model>MageOS\AdminAssist\Model\Config\Providers</source_model>
+                    <source_model>MageOS\AdminAssistant\Model\Config\Providers</source_model>
                     <comment>Select the LLM(large language model) you wish to connect to</comment>
                 </field>
                 <field id="url" translate="label comment" type="text" sortOrder="30" showInDefault="1">

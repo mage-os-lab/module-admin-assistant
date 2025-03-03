@@ -1,5 +1,5 @@
 <?php
-namespace MageOS\AdminAssist\Controller\Adminhtml\Ai;
+namespace MageOS\AdminAssistant\Controller\Adminhtml\Ai;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 

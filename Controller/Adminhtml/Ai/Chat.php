@@ -1,11 +1,11 @@
 <?php
-namespace MageOS\AdminAssist\Controller\Adminhtml\Ai;
+namespace MageOS\AdminAssistant\Controller\Adminhtml\Ai;
 
 use LLPhant\Chat\Enums\ChatRole;
 use LLPhant\Chat\MessageFactory;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use \Magento\Framework\Serialize\Serializer\Json;
-use MageOS\AdminAssist\Api\BotInterface;
+use MageOS\AdminAssistant\Api\BotInterface;
 use Psr\Log\LoggerInterface;
 
 /**

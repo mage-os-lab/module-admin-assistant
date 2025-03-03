@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MageOS\AdminAssist\Model;
+namespace MageOS\AdminAssistant\Model;
 
 use LLPhant\Chat\ChatInterface;
 use LLPhant\Chat\OllamaChatFactory;
@@ -11,8 +11,8 @@ use LLPhant\Embeddings\EmbeddingGenerator\Ollama\OllamaEmbeddingGeneratorFactory
 use LLPhant\Embeddings\EmbeddingGenerator\OpenAI\OpenAI3SmallEmbeddingGeneratorFactory;
 use LLPhant\OllamaConfig;
 use LLPhant\OpenAIConfig;
-use MageOS\AdminAssist\Model\Config;
-use MageOS\AdminAssist\Model\Config\Providers;
+use MageOS\AdminAssistant\Model\Config;
+use MageOS\AdminAssistant\Model\Config\Providers;
 
 class LlmFactory
 {

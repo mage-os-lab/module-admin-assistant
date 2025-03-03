@@ -1,5 +1,5 @@
 <?php
-namespace MageOS\AdminAssist\Model;
+namespace MageOS\AdminAssistant\Model;
 /**
  * Creates a markdown document based on the parsed documentation
  *

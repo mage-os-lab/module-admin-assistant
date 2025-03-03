@@ -9,7 +9,7 @@
     <update handle="styles" />
     <body>
         <referenceContainer name="content">
-            <block class="MageOS\AdminAssist\Block\Config" name="assistant_config" template="MageOS_AdminAssist::ai.phtml"/>
+            <block class="MageOS\AdminAssistant\Block\Config" name="assistant_config" template="MageOS_AdminAssistant::ai.phtml"/>
         </referenceContainer>
     </body>
 </page>

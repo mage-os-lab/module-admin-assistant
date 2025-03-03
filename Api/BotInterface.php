@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MageOS\AdminAssist\Api;
+namespace MageOS\AdminAssistant\Api;
 
 use Psr\Http\Message\StreamInterface;
 

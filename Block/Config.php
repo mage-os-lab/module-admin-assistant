@@ -1,5 +1,5 @@
 <?php
-namespace MageOS\AdminAssist\Block;
+namespace MageOS\AdminAssistant\Block;
 
 class Config extends \Magento\Backend\Block\Template
 {

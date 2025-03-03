@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MageOS\AdminAssist\Model;
+namespace MageOS\AdminAssistant\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Catalog\Model\Product;

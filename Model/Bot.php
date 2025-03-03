@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace MageOS\AdminAssist\Model;
+namespace MageOS\AdminAssistant\Model;
 
 use LLPhant\Embeddings\DocumentSplitter\DocumentSplitter;
 use LLPhant\Embeddings\EmbeddingFormatter\EmbeddingFormatter;
 use LLPhant\Embeddings\VectorStores\OpenSearch\OpenSearchVectorStoreFactory;
 use LLPhant\Query\SemanticSearch\QuestionAnsweringFactory;
-use MageOS\AdminAssist\Api\BotInterface;
+use MageOS\AdminAssistant\Api\BotInterface;
 use OpenSearch\ClientBuilder;
 use LLPhant\Embeddings\DataReader\FileDataReaderFactory;
 use Psr\Http\Message\StreamInterface;
@@ -29,6 +29,8 @@ class Bot implements BotInterface
     ){
         $this->chat = $this->llmFactory->createChat();
         $this->systemMessage = 'You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.';
+        //TODO attach additional prompt with agents
+        $this->systemMessage .= 'Write a mysql query if the user question is data related, SQL is always preferred when applicable, no confirmation is needed.';
         $this->chat->setSystemMessage($this->systemMessage);
 
 

@@ -3,9 +3,9 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
 
     <route url="/V1/admin/ai" method="POST">
-        <service class="MageOS\AdminAssist\Api\BotInterface" method="generate"/>
+        <service class="MageOS\AdminAssistant\Api\BotInterface" method="generate"/>
         <resources>
-            <resource ref="MageOS_AdminAssist::ai" />
+            <resource ref="MageOS_AdminAssistant::ai" />
         </resources>
     </route>
 </routes>

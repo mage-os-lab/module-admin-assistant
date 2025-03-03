@@ -6,7 +6,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="MageOS_AdminAssist::ai" title="Admin AI Assistant" translate="title" />
+                            <resource id="MageOS_AdminAssistant::ai" title="Admin AI Assistant" translate="title" />
                         </resource>
                     </resource>
                 </resource>

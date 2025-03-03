@@ -30,7 +30,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "MageOS\\AdminAssist\\": ""
+            "MageOS\\AdminAssistant\\": ""
         }
     }
 }

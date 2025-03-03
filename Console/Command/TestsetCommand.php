@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MageOS\AdminAssist\Console\Command;
+namespace MageOS\AdminAssistant\Console\Command;
 
 use LLPhant\Chat\Enums\ChatRole;
 use LLPhant\Chat\MessageFactory;
@@ -69,7 +69,7 @@ class TestsetCommand extends Command
                 ->setHosts(['http://search:9200'])
                 ->setRetries(2)
                 ->build();
-            $testSet = explode("\n", file_get_contents($this->moduleDir->getDir('MageOS_AdminAssist', 'etc') . '/testset.jsonl'));
+            $testSet = explode("\n", file_get_contents($this->moduleDir->getDir('MageOS_AdminAssistant', 'etc') . '/testset.jsonl'));
             $vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $client, 'indexName' => 'llphant_custom_index1']);;
 
 
@@ -94,11 +94,11 @@ class TestsetCommand extends Command
                 $answer = (string)$qa->answerQuestionFromChat($messages);
                 $test['response'] = $answer;
                 $testSet[$i] = json_encode($test);
-                file_put_contents($this->moduleDir->getDir('MageOS_AdminAssist', 'etc') . '/result.jsonl', json_encode($test) . PHP_EOL, FILE_APPEND);
+                file_put_contents($this->moduleDir->getDir('MageOS_AdminAssistant', 'etc') . '/result.jsonl', json_encode($test) . PHP_EOL, FILE_APPEND);
             }
 
             //$output->writeln("<info>Documents Embedded</info>");
-            //file_put_contents($this->moduleDir->getDir('MageOS_AdminAssist', 'etc') . 'testset.json', json_encode($testSet, JSON_PRETTY_PRINT));
+            //file_put_contents($this->moduleDir->getDir('MageOS_AdminAssistant', 'etc') . 'testset.json', json_encode($testSet, JSON_PRETTY_PRINT));
         } catch (LocalizedException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
             return Cli::RETURN_FAILURE;

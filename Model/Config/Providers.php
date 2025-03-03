@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MageOS\AdminAssist\Model\Config;
+namespace MageOS\AdminAssistant\Model\Config;
 
 /**
  * @api
