@@ -53,7 +53,7 @@ class Bot implements BotInterface
         return $qa->answerQuestionFromChat($messages);
     }
 
-    public function learn($documents, $forgetOldKnowledge = true)
+    public function learn($documents, $forgetOldKnowledge = true): self
     {
         if($forgetOldKnowledge) {
             $this->client->indices()->delete([

@@ -4,9 +4,8 @@ namespace MageOS\AdminAssist\Controller\Adminhtml\Ai;
 use LLPhant\Chat\Enums\ChatRole;
 use LLPhant\Chat\MessageFactory;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\ResourceConnection;
 use \Magento\Framework\Serialize\Serializer\Json;
-use MageOS\AdminAssist\Model\Bot;
+use MageOS\AdminAssist\Api\BotInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -35,8 +34,7 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         \Magento\Framework\Controller\Result\JsonFactory $answerFactory,
         private MessageFactory $messageFactory,
         private Json $serializer,
-        private ResourceConnection $resourceConnection,
-        private Bot $bot,
+        private BotInterface $bot,
         private LoggerInterface $logger
     ) {
         $this->answerFactory = $answerFactory;
