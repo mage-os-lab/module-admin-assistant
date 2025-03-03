@@ -52,13 +52,8 @@ class EmbeddingCreateCommand extends Command
 
             $docPath = '/var/www/pub/media/docs/merchant/src/test';
             $output->writeln("<info>Embedding $docPath</info>");
-            $reader = $this->fileDataReaderFactory->create(['filePath' => $docPath]);
-            $documents = $reader->getDocuments();
-            $docsCount = count($documents);
-            $output->writeln("<info>Retrieved {$docsCount} documents</info>");
-            $splitDocuments = DocumentSplitter::splitDocuments($documents, 800);
-            $formattedDocuments = EmbeddingFormatter::formatEmbeddings($splitDocuments);
-            $this->bot->learn($formattedDocuments);
+            $this->bot->reset();
+            $this->bot->learn($docPath);
             $output->writeln("<info>Documents Embedded</info>");
         } catch (LocalizedException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');

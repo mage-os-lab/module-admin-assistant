@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace MageOS\AdminAssist\Model;
 
+use LLPhant\Embeddings\DocumentSplitter\DocumentSplitter;
+use LLPhant\Embeddings\EmbeddingFormatter\EmbeddingFormatter;
 use LLPhant\Embeddings\VectorStores\OpenSearch\OpenSearchVectorStoreFactory;
 use LLPhant\Query\SemanticSearch\QuestionAnsweringFactory;
 use MageOS\AdminAssist\Api\BotInterface;
 use OpenSearch\ClientBuilder;
+use LLPhant\Embeddings\DataReader\FileDataReaderFactory;
 use Psr\Http\Message\StreamInterface;
 
 class Bot implements BotInterface
@@ -22,6 +25,7 @@ class Bot implements BotInterface
         private QuestionAnsweringFactory $questionAnsweringFactory,
         private OpenSearchVectorStoreFactory $openSearchVectorStoreFactory,
         private LlmFactory $llmFactory,
+        private FileDataReaderFactory $fileDataReaderFactory,
     ){
         $this->chat = $this->llmFactory->createChat();
         $this->systemMessage = 'You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.';
@@ -53,17 +57,23 @@ class Bot implements BotInterface
         return $qa->answerQuestionFromChat($messages);
     }
 
-    public function learn($documents, $forgetOldKnowledge = true): self
+    public function reset(): self
     {
-        if($forgetOldKnowledge) {
-            $this->client->indices()->delete([
-                'index' => self::INDEX_NAME,
-                'ignore_unavailable' => true
-            ]);
+        $this->client->indices()->delete([
+            'index' => self::INDEX_NAME,
+            'ignore_unavailable' => true
+        ]);
+        $this->vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $this->client, 'indexName' => self::INDEX_NAME]);;
+        return $this;
+    }
 
-            $this->vectorStore = $this->openSearchVectorStoreFactory->create(['client' => $this->client, 'indexName' => self::INDEX_NAME]);;
-        }
-        $embeddedDocuments = $this->embeddingGenerator->embedDocuments($documents);
+    public function learn($docPath): self
+    {
+        $reader = $this->fileDataReaderFactory->create(['filePath' => $docPath]);
+        $documents = $reader->getDocuments();
+        $splitDocuments = DocumentSplitter::splitDocuments($documents, 800);
+        $formattedDocuments = EmbeddingFormatter::formatEmbeddings($splitDocuments);
+        $embeddedDocuments = $this->embeddingGenerator->embedDocuments($formattedDocuments);
 
         $this->vectorStore->addDocuments($embeddedDocuments);
 

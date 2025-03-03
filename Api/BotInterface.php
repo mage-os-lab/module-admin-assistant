@@ -24,11 +24,17 @@ interface BotInterface
     public function answer($messages): StreamInterface;
 
     /**
-     * Learn from documents
+     * Forget all learned documents
      *
-     * @param $documents
-     * @param bool $forgetOldKnowledge
      * @return self
      */
-    public function learn($documents, $forgetOldKnowledge = true): self;
+    public function reset(): self;
+
+    /**
+     * Learn from documents
+     *
+     * @param $docPath
+     * @return self
+     */
+    public function learn($docPath): self;
 }
