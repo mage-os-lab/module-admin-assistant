@@ -5,6 +5,15 @@ $endppint = $block->getEndpoint();
     type="module"
     src="https://unpkg.com/deep-chat@2.1.1/dist/deepChat.bundle.js"
 ></script>
+<script
+    type="module"
+    src="https://unpkg.com/active-table@1.1.6/dist/activeTable.bundle.js"
+></script>
+<script>
+    let sqlButton = '<div class="deep-chat-temporary-message">' +
+        '<button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green">Run Query</button>'  +
+    '</div>';
+</script>
 <deep-chat id="ai-chat"
     connect='{
     "url": "<?php echo $endppint; ?>?isAjax=true&form_key=<?php echo $block->getFormKey(); ?>",
@@ -17,6 +26,13 @@ $endppint = $block->getEndpoint();
     "totalMessagesMaxCharLength": 10000,
     "maxMessages": -1
   }'
+           responseInterceptor="(response) => {
+  console.log(response);
+  if(response.html) {
+    document.getElementById('ai-chat').addMessage({html: response.html, role: 'system'});
+  }
+  return response;
+}"
   style="border-radius: 10px; border-color: #dcdcdc; background-color: #f3f6fc; font-size: 1.2em; width: 800px; height: 600px;"
   textInput='{
     "styles": {
@@ -29,14 +45,16 @@ $endppint = $block->getEndpoint();
     "default": {
       "shared": {"bubble": {"maxWidth": "100%", "backgroundColor": "unset", "marginTop": "10px", "marginBottom": "10px"}},
       "user": {"bubble": {"marginLeft": "0px", "color": "black"}},
-      "ai": {"innerContainer": {"borderRadius": "15px", "backgroundColor": "white"}}
+      "ai": {"innerContainer": {"borderRadius": "15px", "backgroundColor": "white"}},
+      "system": {"innerContainer": {"backgroundColor": "transparent"}},
     }
   }'
   avatars='{
     "default": {
       "styles": {"position": "left", "container": {"marginLeft": "12px", "marginRight": "5px"}}
     },
-    "ai": {"src": "<?php echo $block->getViewFileUrl('images/mage-os-icon.svg');?>", "styles": {"position": "left", "avatar": {"paddingTop": "6px"}}}
+    "ai": {"src": "<?php echo $block->getViewFileUrl('MageOS_AdminAssistant::images/bot.svg');?>", "styles": {"position": "left", "avatar": {"paddingTop": "6px"}}},
+    "system": {"src": "<?php echo $block->getViewFileUrl('MageOS_AdminAssistant::images/system.svg');?>", "styles": {"position": "left"}}
   }'
   speechToText='{
     "button": {
@@ -86,3 +104,11 @@ $endppint = $block->getEndpoint();
     }
   }'
 ></deep-chat>
+
+<script>
+    chatElementRef = document.getElementById('ai-chat');
+    chatElementRef.responseInterceptor = (response) => {
+        console.log(response); // printed above
+        return response;
+    };
+</script>
