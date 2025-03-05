@@ -7,6 +7,8 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResourceConnection;
 use \Magento\Framework\Serialize\Serializer\Json;
 use MageOS\AdminAssistant\Api\BotInterface;
+use MageOS\AdminAssistant\Model\Callback\Sql;
+use MageOS\AdminAssistant\Model\Http\Response\Stream;
 use Psr\Log\LoggerInterface;
 use MageOS\AdminAssistant\Model\TextTableFactory;
 
@@ -41,18 +43,20 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         private BotInterface $bot,
         private LoggerInterface $logger,
         private ResourceConnection $resourceConnection,
-        private TextTableFactory $textTableFactory
+        private TextTableFactory $textTableFactory,
+        private Stream $stream,
+        private \MageOS\AdminAssistant\Model\Agent\Sql $sqlAgent,
+        private Sql $sqlCallback,
     ) {
         $this->answerFactory = $answerFactory;
         parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Raw
+     * @return Stream
      */
     public function execute()
     {
-        $answer = $this->answerFactory->create();
         $post = $this->serializer->unserialize($this->getRequest()->getContent());
         $messages = [];
         $lastSysMessage = '';
@@ -68,74 +72,24 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
             $copyMessages[] = clone $message;
         }
 
-        // @TODO refactor
-        if($lastSysMessage && $result = $this->runQuery($lastSysMessage, $copyMessages)) {
-            header("X-Accel-Buffering: no");
-            header("Content-Type: text/event-stream");
-            header("Cache-Control: no-cache");
-            echo "data:" . json_encode($result) . "\n\n";
-            @ob_flush();
-            flush();
+        // @TODO use an agent pool
+        if($result = $this->sqlAgent->execute($lastSysMessage)) {
+            $this->stream->setData($result);
         }
 
         $result = [];
         try {
             $llmAnswer = $this->bot->answer($messages);
-
-            //TODO: encapsulate the answer in a stream resopnse class
-            header("X-Accel-Buffering: no");
-            header("Content-Type: text/event-stream");
-            header("Cache-Control: no-cache");
-            $runQuery = false;
-            $text = '';
-            while(!$llmAnswer->eof()) {
-                $prevText = $text;
-                $text = $llmAnswer->read(64);
-                echo "data:" . json_encode(['text' => $text]) . "\n\n";
-                @ob_flush();
-                flush();
-                if(stristr($prevText . $text, '```sql')) {
-                    $runQuery = true;
-                }
-            }
-            if($runQuery) {
-                echo "data:" . json_encode(['html' => '<div class="deep-chat-temporary-message"><button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green">Run Query</button></div>']) . "\n\n";
-                @ob_flush();
-                flush();
-            }
-            exit();
+            $this->stream->setData($llmAnswer);
+            $this->stream->addCallback($this->sqlCallback);
         }
         catch (\Exception $e) {
             $this->logger->warning($e->getMessage());
             $result = [
                 'error' => 'Sorry something is wrong, please try again' , $e->getMessage()
             ];
+            $this->stream->setData($result);
         }
-        $answer->setData($result);
-        return $answer;
-    }
-
-    protected function runQuery($message, $messages) {
-        preg_match_all('/```sql(.*?)```/s', $message, $matches);
-        $result = [];
-        if($this->sqlRetry++ > 5) {
-            return $result;
-        }
-        if(isset($matches[1][0]) && !empty($matches[1][0])) {
-            $connection = $this->resourceConnection->getConnection();
-            try {
-                $result = $connection->fetchAll($matches[1][0]);
-                $tt = $this->textTableFactory->create(['header' => null, 'content'=> $result]);
-                $result = [
-                    'text' => $tt->render(),
-                ];
-            }
-            catch(\Exception $e) {
-                $messages[] = $this->messageFactory->create(['role' => 'user', 'content' => 'The query failed with this error message: ' . $e->getMessage() , '; Please correct the query']);
-                $answer = (string)$this->bot->answer($messages);
-                $result = $this->runQuery($answer, $messages);
-            }
-        }
-        return $result;
+        return $this->stream;
     }
 }
