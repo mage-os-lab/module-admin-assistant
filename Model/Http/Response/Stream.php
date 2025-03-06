@@ -61,13 +61,11 @@ class Stream extends AbstractResult
      */
     protected function render(HttpResponseInterface $response)
     {
-//        header("X-Accel-Buffering: no");
-//        header("Content-Type: text/event-stream");
-//        header("Cache-Control: no-cache");
-
         $response->setHeader('X-Accel-Buffering', 'no', true);
-        $response->setHeader('Content-Type', 'text/event-stream', true);
+        $response->setHeader('Content-type', 'text/event-stream', true);
         $response->setHeader('Cache-Control', 'no-cache', true);
+        //response has to be sent early to set streaming header before display
+        $response->sendResponse();
 
         if($this->source instanceof StreamInterface) {
             while(!$this->source->eof()) {
@@ -87,7 +85,11 @@ class Stream extends AbstractResult
         // callback
 
         foreach ($this->callbacks as $callback) {
-            $callback();
+            if($result = $callback->execute($this->streamedContent)) {
+                echo "data:" . json_encode($result) . "\n\n";
+                @ob_flush();
+                flush();
+            }
         }
 
         return $this;

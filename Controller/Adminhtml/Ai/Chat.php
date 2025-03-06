@@ -59,8 +59,8 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
     {
         $post = $this->serializer->unserialize($this->getRequest()->getContent());
         $messages = [];
+        $result = [];
         $lastSysMessage = '';
-        $copyMessages =[];
         foreach ($post['messages'] ?? [] as $postMessage) {
             $message = $this->messageFactory->create();
             $message->role = ChatRole::from($postMessage['role'] === 'user' ? 'user' : 'assistant'); // TODO use a custom role class
@@ -69,27 +69,27 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
             if($postMessage['role'] == 'ai') {
                 $lastSysMessage = $postMessage['text'];
             }
-            $copyMessages[] = clone $message;
         }
 
         // @TODO use an agent pool
         if($result = $this->sqlAgent->execute($lastSysMessage)) {
             $this->stream->setData($result);
         }
+        else {
+            try {
+                $llmAnswer = $this->bot->answer($messages);
+                $this->stream->setData($llmAnswer);
+                $this->stream->addCallback($this->sqlCallback);
+            }
+            catch (\Exception $e) {
+                $this->logger->warning($e->getMessage());
+                $result = [
+                    'error' => 'Sorry something is wrong, please try again' , $e->getMessage()
+                ];
+                $this->stream->setData($result);
+            }
+        }
 
-        $result = [];
-        try {
-            $llmAnswer = $this->bot->answer($messages);
-            $this->stream->setData($llmAnswer);
-            $this->stream->addCallback($this->sqlCallback);
-        }
-        catch (\Exception $e) {
-            $this->logger->warning($e->getMessage());
-            $result = [
-                'error' => 'Sorry something is wrong, please try again' , $e->getMessage()
-            ];
-            $this->stream->setData($result);
-        }
         return $this->stream;
     }
 }

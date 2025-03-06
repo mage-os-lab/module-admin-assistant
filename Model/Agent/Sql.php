@@ -2,6 +2,8 @@
 
 namespace MageOS\AdminAssistant\Model\Agent;
 
+use Psr\Log\LoggerInterface;
+
 class Sql
 {
     protected $sqlRetry = 0;
@@ -9,8 +11,9 @@ class Sql
     public function __construct(
         private readonly \Magento\Framework\App\ResourceConnection $resourceConnection,
         private readonly \MageOS\AdminAssistant\Model\TextTableFactory $textTableFactory,
-        private readonly \MageOS\AdminAssistant\Model\Callback\MessageFactory $messageFactory,
-        private readonly \MageOS\AdminAssistant\Model\Agent\Bot $bot
+        private readonly \LLPhant\Chat\MessageFactory $messageFactory,
+        private readonly \MageOS\AdminAssistant\Model\Bot $bot,
+        private readonly LoggerInterface $logger
     ) {}
 
     public function execute(string $message): array
@@ -34,6 +37,7 @@ class Sql
                 ];
             }
             catch(\Exception $e) {
+                $this->logger->info($e->getMessage());
                 // TODO: no need for question answering, a chat method is good enough
                 $messages = [];
                 $messages[] = $this->messageFactory->create(['role' => 'user', 'content' => '```sql' . $sql . '``` The above mysql query failed with this error message: ' . $e->getMessage() , ' from the server; Please correct the query']);
