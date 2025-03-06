@@ -11,6 +11,7 @@ use LLPhant\Embeddings\EmbeddingGenerator\Ollama\OllamaEmbeddingGeneratorFactory
 use LLPhant\Embeddings\EmbeddingGenerator\OpenAI\OpenAI3SmallEmbeddingGeneratorFactory;
 use LLPhant\OllamaConfig;
 use LLPhant\OpenAIConfig;
+use Magento\Framework\Exception\InvalidArgumentException;
 use MageOS\AdminAssistant\Model\Config;
 use MageOS\AdminAssistant\Model\Config\Providers;
 
@@ -37,6 +38,9 @@ class LlmFactory
         return $this->create('embedding');
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     protected function create(string $type): ChatInterface|EmbeddingGeneratorInterface
     {
         $chat = null;
@@ -48,7 +52,7 @@ class LlmFactory
             $chat = $this->ollamaChatFactory->create([$this->ollamaConfig]);
             $embedding = $this->ollamaEmbeddingGeneratorFactory->create(['config' => $this->ollamaConfig]);
         }
-        else if ($provider === Providers::OPENAI) {
+        elseif ($provider === Providers::OPENAI) {
             $this->openAIConfig->model = $this->config->getModel();
             $this->openAIConfig->apiKey = $this->config->getApiKey();
             if($host = $this->config->getHost()) {
@@ -57,11 +61,13 @@ class LlmFactory
             $chat = $this->openAIChatFactory->create([$this->openAIConfig]);
             $embedding = $this->openaiEmbeddingGeneratorFactory->create(['config' => $this->openAIConfig]);
         }
+        else {
+            throw new InvalidArgumentException(__('%s is not supported', $provider));
+        }
         return match($type) {
             'chat' => $chat,
             'embedding' => $embedding,
-            default => throw new \InvalidArgumentException('Invalid type'),
+            default => throw new InvalidArgumentException(__('Invalid type')),
         };
-        throw new \InvalidArgumentException('Invalid provider');
     }
 }
