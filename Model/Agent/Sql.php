@@ -4,8 +4,9 @@ namespace MageOS\AdminAssistant\Model\Agent;
 
 use LLPhant\Chat\Enums\ChatRole;
 use Psr\Log\LoggerInterface;
+use MageOS\AdminAssistant\Api\AgentInterface;
 
-class Sql
+class Sql implements AgentInterface
 {
     protected $sqlRetry = 0;
 
@@ -16,6 +17,11 @@ class Sql
         private readonly \MageOS\AdminAssistant\Model\Bot $bot,
         private readonly LoggerInterface $logger
     ) {}
+
+    public function isEnabled(): bool
+    {
+        return true;
+    }
 
     public function execute(string $message): array
     {
@@ -38,6 +44,7 @@ class Sql
             }
             else {
                 $connection = $this->resourceConnection->getConnection();
+                $connection->beginTransaction();
                 try {
                     $result = $connection->fetchAll($sql);
                     $tt = $this->textTableFactory->create(['header' => null, 'content'=> $result]);

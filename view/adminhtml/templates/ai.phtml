@@ -109,6 +109,9 @@ $endppint = $block->getEndpoint();
     chatElementRef = document.getElementById('ai-chat');
     chatElementRef.responseInterceptor = (response) => {
         console.log(response); // printed above
+        if(response.ajaxExpired && response.ajaxRedirect) {
+            window.location.href = response.ajaxRedirect;
+        }
         return response;
     };
 </script>

@@ -4,35 +4,32 @@ namespace MageOS\AdminAssistant\Controller\Adminhtml\Ai;
 use LLPhant\Chat\Enums\ChatRole;
 use LLPhant\Chat\MessageFactory;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use \Magento\Framework\Serialize\Serializer\Json;
+use Magento\Framework\Serialize\Serializer\Json;
 use MageOS\AdminAssistant\Api\BotInterface;
 use MageOS\AdminAssistant\Model\Http\Response\Stream;
 use Psr\Log\LoggerInterface;
+use MageOS\AdminAssistant\Api\AgentInterface;
+use MageOS\AdminAssistant\Api\CallbackInterface;
 
 /**
  * Index action.
  */
 class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
-    /**
-     * @var \Magento\Framework\View\Result\PageFactory
-     */
-    protected $resultPageFactory;
-
-    /**
-     * @var \Magento\Framework\Controller\Result\JsonFactory
-     */
-    protected $answerFactory;
-
     protected $chat;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param MessageFactory $messageFactory
+     * @param Json $serializer
+     * @param BotInterface $bot
+     * @param LoggerInterface $logger
+     * @param Stream $stream
+     * @param AgentInterface[] $agents
+     * @param CallbackInterface[] $callbacks
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Controller\Result\JsonFactory $answerFactory,
         private MessageFactory $messageFactory,
         private Json $serializer,
         private BotInterface $bot,
@@ -41,7 +38,6 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         private array $agents = [],
         private array $callbacks = [],
     ) {
-        $this->answerFactory = $answerFactory;
         parent::__construct($context);
     }
 
@@ -66,7 +62,7 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
 
         $agentMatched = false;
         foreach ($this->agents as $agent) {
-            if($result = $agent->execute($lastSysMessage)) {
+            if($agent->isEnabled() && $result = $agent->execute($lastSysMessage)) {
                 $agentMatched = true;
                 $this->stream->setData($result);
                 // TODO: might worth to support chaining multiple agents
@@ -78,7 +74,9 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
                 $llmAnswer = $this->bot->answer($messages);
                 $this->stream->setData($llmAnswer);
                 foreach ($this->callbacks as $callback) {
-                    $this->stream->addCallback($callback);
+                    if($callback->isEnabled()) {
+                        $this->stream->addCallback($callback);
+                    }
                 }
             }
             catch (\Exception $e) {

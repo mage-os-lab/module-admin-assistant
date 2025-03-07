@@ -6,6 +6,10 @@ use MageOS\AdminAssistant\Model\Http\Response\Stream\CallbackInterface;
 
 class Sql implements CallbackInterface
 {
+    public function isEnabled(): bool
+    {
+        return true;
+    }
 
     public function execute(string $data): array
     {
