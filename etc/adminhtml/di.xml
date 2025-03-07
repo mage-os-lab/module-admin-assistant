@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="MageOS\AdminAssistant\Controller\Adminhtml\Ai\Chat">
+        <arguments>
+            <argument name="agents" xsi:type="array">
+                <item name="sql" xsi:type="object" sortOrder="10">MageOS\AdminAssistant\Model\Agent\Sql</item>
+            </argument>
+            <argument name="callbacks" xsi:type="array">
+                <item name="sql" xsi:type="object" sortOrder="10">MageOS\AdminAssistant\Model\Callback\Sql</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

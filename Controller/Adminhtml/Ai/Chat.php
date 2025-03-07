@@ -4,13 +4,10 @@ namespace MageOS\AdminAssistant\Controller\Adminhtml\Ai;
 use LLPhant\Chat\Enums\ChatRole;
 use LLPhant\Chat\MessageFactory;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\ResourceConnection;
 use \Magento\Framework\Serialize\Serializer\Json;
 use MageOS\AdminAssistant\Api\BotInterface;
-use MageOS\AdminAssistant\Model\Callback\Sql;
 use MageOS\AdminAssistant\Model\Http\Response\Stream;
 use Psr\Log\LoggerInterface;
-use MageOS\AdminAssistant\Model\TextTableFactory;
 
 /**
  * Index action.
@@ -29,8 +26,6 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
 
     protected $chat;
 
-    protected $sqlRetry = 0;
-
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
@@ -42,11 +37,9 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         private Json $serializer,
         private BotInterface $bot,
         private LoggerInterface $logger,
-        private ResourceConnection $resourceConnection,
-        private TextTableFactory $textTableFactory,
         private Stream $stream,
-        private \MageOS\AdminAssistant\Model\Agent\Sql $sqlAgent,
-        private Sql $sqlCallback,
+        private array $agents = [],
+        private array $callbacks = [],
     ) {
         $this->answerFactory = $answerFactory;
         parent::__construct($context);
@@ -71,15 +64,22 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
             }
         }
 
-        // @TODO use an agent pool
-        if($result = $this->sqlAgent->execute($lastSysMessage)) {
-            $this->stream->setData($result);
+        $agentMatched = false;
+        foreach ($this->agents as $agent) {
+            if($result = $agent->execute($lastSysMessage)) {
+                $agentMatched = true;
+                $this->stream->setData($result);
+                // TODO: might worth to support chaining multiple agents
+                break;
+            }
         }
-        else {
+        if(!$agentMatched) {
             try {
                 $llmAnswer = $this->bot->answer($messages);
                 $this->stream->setData($llmAnswer);
-                $this->stream->addCallback($this->sqlCallback);
+                foreach ($this->callbacks as $callback) {
+                    $this->stream->addCallback($callback);
+                }
             }
             catch (\Exception $e) {
                 $this->logger->warning($e->getMessage());
