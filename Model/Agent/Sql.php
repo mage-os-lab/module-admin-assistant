@@ -3,11 +3,13 @@
 namespace MageOS\AdminAssistant\Model\Agent;
 
 use LLPhant\Chat\Enums\ChatRole;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Psr\Log\LoggerInterface;
 use MageOS\AdminAssistant\Api\AgentInterface;
 
 class Sql implements AgentInterface
 {
+    public const CODE = 'sql';
     protected $sqlRetry = 0;
 
     public function __construct(
@@ -15,22 +17,30 @@ class Sql implements AgentInterface
         private readonly \MageOS\AdminAssistant\Model\TextTableFactory $textTableFactory,
         private readonly \LLPhant\Chat\MessageFactory $messageFactory,
         private readonly \MageOS\AdminAssistant\Model\Bot $bot,
+        private readonly ScopeConfigInterface $scopeConfig,
         private readonly LoggerInterface $logger
     ) {}
 
     public function isEnabled(): bool
     {
-        return true;
+        return in_array(self::CODE, explode(',', $this->scopeConfig->getValue('admin/aiassistant/agents') ?? ''));
     }
 
-    public function execute(string $message): array
+    public function execute(array $messages): array
     {
-        preg_match_all('/```sql(.*?)```/s', $message, $matches);
+        $result = [];
+        $lastSysMessage = '';
+        foreach ($messages as $message) {
+            if($message->role == ChatRole::Assistant) {
+                $lastSysMessage = $message->content;
+            }
+        }
+
+        preg_match_all('/```sql(.*?)```/s', $lastSysMessage, $matches);
         $sql = '';
         if(!empty($matches[1][0])) {
             $sql = $matches[1][0];
         }
-        $result = [];
         if($this->sqlRetry++ > 3) {
             $result['error'] = 'Query Failed!';
         }

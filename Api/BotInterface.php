@@ -18,10 +18,10 @@ interface BotInterface
     /**
      * Answer a message
      *
-     * @param string $messages
+     * @param array $messages
      * @return StreamInterface
      */
-    public function answer($messages): StreamInterface;
+    public function answer(array $messages): StreamInterface;
 
     /**
      * Forget all learned documents

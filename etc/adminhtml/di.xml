@@ -3,10 +3,11 @@
     <type name="MageOS\AdminAssistant\Controller\Adminhtml\Ai\Chat">
         <arguments>
             <argument name="agents" xsi:type="array">
-                <item name="sql" xsi:type="object" sortOrder="10">MageOS\AdminAssistant\Model\Agent\Sql</item>
+                <item name="guardrail" xsi:type="object" sortOrder="10">MageOS\AdminAssistant\Model\Agent\Guardrail</item>
+                <item name="sql" xsi:type="object" sortOrder="20">MageOS\AdminAssistant\Model\Agent\Sql</item>
             </argument>
             <argument name="callbacks" xsi:type="array">
-                <item name="sql" xsi:type="object" sortOrder="10">MageOS\AdminAssistant\Model\Callback\Sql</item>
+                <item name="sql" xsi:type="object" sortOrder="20">MageOS\AdminAssistant\Model\Callback\Sql</item>
             </argument>
         </arguments>
     </type>

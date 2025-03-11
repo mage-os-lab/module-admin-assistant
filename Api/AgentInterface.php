@@ -4,6 +4,7 @@ namespace MageOS\AdminAssistant\Api;
 
 interface AgentInterface
 {
-    public function execute(string $message): array;
+    public const CODE = '';
+    public function execute(array $messages): array;
     public function isEnabled(): bool;
 }

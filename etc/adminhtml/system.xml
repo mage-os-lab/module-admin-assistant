@@ -25,6 +25,11 @@
                     <label>Model</label>
                     <comment>The model of the LLM to run, e.g. `llama3.2` for Ollama, `GPT-4o` for OpenAI etc</comment>
                 </field>
+                <field id="agents" translate="label" type="multiselect" sortOrder="60" showInDefault="1">
+                    <label>Agents</label>
+                    <source_model>MageOS\AdminAssistant\Model\Source\Agent</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
             </group>
         </section>
     </system>

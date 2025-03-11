@@ -49,20 +49,16 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         $post = $this->serializer->unserialize($this->getRequest()->getContent());
         $messages = [];
         $result = [];
-        $lastSysMessage = '';
         foreach ($post['messages'] ?? [] as $postMessage) {
             $message = $this->messageFactory->create();
             $message->role = ChatRole::from($postMessage['role'] === 'user' ? 'user' : 'assistant'); // TODO use a custom role class
             $message->content = $postMessage['text'];
             $messages[] = $message;
-            if($postMessage['role'] == 'ai') {
-                $lastSysMessage = $postMessage['text'];
-            }
         }
 
         $agentMatched = false;
         foreach ($this->agents as $agent) {
-            if($agent->isEnabled() && $result = $agent->execute($lastSysMessage)) {
+            if($agent->isEnabled() && $result = $agent->execute($messages)) {
                 $agentMatched = true;
                 $this->stream->setData($result);
                 // TODO: might worth to support chaining multiple agents

@@ -6,9 +6,13 @@ use MageOS\AdminAssistant\Model\Http\Response\Stream\CallbackInterface;
 
 class Sql implements CallbackInterface
 {
+    public function __construct(
+        private \MageOS\AdminAssistant\Model\Agent\Sql $agent
+    ) {}
+
     public function isEnabled(): bool
     {
-        return true;
+        return $this->agent->isEnabled();
     }
 
     public function execute(string $data): array
