@@ -36,7 +36,7 @@ class Providers implements \Magento\Framework\Option\ArrayInterface
         return [
             Providers::OLLAMA => __('Ollama'),
             Providers::OPENAI => __('OpenAI'),
-            Providers::ANTHROPIC => __('Anthropic')
+            Providers::ANTHROPIC => __('Anthropic (coming soon)'),
         ];
     }
 }
