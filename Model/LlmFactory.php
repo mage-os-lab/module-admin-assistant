@@ -49,7 +49,7 @@ class LlmFactory
         if ($provider === Providers::OLLAMA) {
             $this->ollamaConfig->model = $this->config->getModel();
             $this->ollamaConfig->url = $this->config->getHost();
-            $chat = $this->ollamaChatFactory->create([$this->ollamaConfig]);
+            $chat = $this->ollamaChatFactory->create(['config' => $this->ollamaConfig]);
             $embedding = $this->ollamaEmbeddingGeneratorFactory->create(['config' => $this->ollamaConfig]);
         }
         elseif ($provider === Providers::OPENAI) {
@@ -58,7 +58,7 @@ class LlmFactory
             if($host = $this->config->getHost()) {
                 $this->openAIConfig->url = $host;
             }
-            $chat = $this->openAIChatFactory->create([$this->openAIConfig]);
+            $chat = $this->openAIChatFactory->create(['config' => $this->openAIConfig]);
             $embedding = $this->openaiEmbeddingGeneratorFactory->create(['config' => $this->openAIConfig]);
         }
         else {
