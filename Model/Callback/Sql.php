@@ -2,10 +2,12 @@
 
 namespace MageOS\AdminAssistant\Model\Callback;
 
-use MageOS\AdminAssistant\Model\Http\Response\Stream\CallbackInterface;
+use MageOS\AdminAssistant\Api\BotInterface;
+use MageOS\AdminAssistant\Api\CallbackInterface;
 
 class Sql implements CallbackInterface
 {
+    protected $bot;
     public function __construct(
         private \MageOS\AdminAssistant\Model\Agent\Sql $agent
     ) {}
@@ -23,5 +25,21 @@ class Sql implements CallbackInterface
             $result = ['html' => '<div class="deep-chat-temporary-message"><button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green">Run Query</button></div>'];
         }
         return $result;
+    }
+
+    public function setBot($bot): void
+    {
+        $this->bot = $bot;
+    }
+
+    public function getBot(): BotInterface
+    {
+        return $this->bot;
+    }
+
+    public function learn(): void
+    {
+        // TODO: Implement learn() method.
+        return;
     }
 }

@@ -9,4 +9,16 @@
             </argument>
         </arguments>
     </type>
+    <type name="MageOS\AdminAssistant\Api\BotInterface">
+        <arguments>
+            <argument name="agents" xsi:type="array">
+                <item name="guardrail" xsi:type="object" sortOrder="10">MageOS\AdminAssistant\Model\Agent\Guardrail</item>
+                <item name="sql" xsi:type="object" sortOrder="20">MageOS\AdminAssistant\Model\Agent\Sql</item>
+            </argument>
+            <argument name="callbacks" xsi:type="array">
+                <item name="sql" xsi:type="object" sortOrder="20">MageOS\AdminAssistant\Model\Callback\Sql</item>
+                <item name="link" xsi:type="object" sortOrder="20">MageOS\AdminAssistant\Model\Callback\Link</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

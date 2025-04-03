@@ -34,9 +34,7 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         private Json $serializer,
         private BotInterface $bot,
         private LoggerInterface $logger,
-        private Stream $stream,
-        private array $agents = [],
-        private array $callbacks = [],
+        private Stream $stream
     ) {
         parent::__construct($context);
     }
@@ -57,7 +55,7 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         }
 
         $agentMatched = false;
-        foreach ($this->agents as $agent) {
+        foreach ($this->bot->getAgents() as $agent) {
             if($agent->isEnabled() && $result = $agent->execute($messages)) {
                 $agentMatched = true;
                 $this->stream->setData($result);
@@ -69,7 +67,7 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
             try {
                 $llmAnswer = $this->bot->answer($messages);
                 $this->stream->setData($llmAnswer);
-                foreach ($this->callbacks as $callback) {
+                foreach ($this->bot->getCallbacks() as $callback) {
                     if($callback->isEnabled()) {
                         $this->stream->addCallback($callback);
                     }

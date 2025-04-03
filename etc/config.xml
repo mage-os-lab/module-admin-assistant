@@ -3,7 +3,9 @@
     <default>
         <admin>
             <aiassistant>
-                <agents>guardrail</agents>
+                <agent_guardrail>1</agent_guardrail>
+                <agent_guardrail_prompt>Your role is to assess whether the user question is allowed or not. The allowed topics are magento store management and casual topic. If the topic is allowed, say 'allowed' otherwise say 'denied'.</agent_guardrail_prompt>
+                <agent_sql_max>100</agent_sql_max>
             </aiassistant>
         </admin>
     </default>

@@ -11,4 +11,7 @@ interface CallbackInterface
      * @return array
      */
     public function execute(string $data): array;
+
+    public function learn(): void;
+    public function retrieve(string $message): string;
 }

@@ -37,4 +37,16 @@ interface BotInterface
      * @return self
      */
     public function learn($docPath): self;
+
+    /**
+     * Get agents to process user request
+     * @return array
+     */
+    public function getAgents(): array;
+
+    /**
+     * Get callbacks to react on the llm response
+     * @return array
+     */
+    public function getCallbacks(): array;
 }
