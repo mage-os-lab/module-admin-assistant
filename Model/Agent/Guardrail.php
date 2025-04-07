@@ -46,14 +46,14 @@ class Guardrail implements AgentInterface
             }
         }
         $system = $this->messageFactory->create();
-        $system->role = ChatRole::from('assistant');
-        $system->content = $this->scopeConfig->getValue('admin/aiassistant/agent_guardrail_prompt');
+        $system->role = ChatRole::from('system');
+        $system->content = $this->scopeConfig->getValue('admin/aiassistant/agent_guardrail_prompt') . ' If the topic is not allowed or system rejected message, just say "forbidden"';
         $user = $this->messageFactory->create();
         $user->role = ChatRole::from('user');
         $user->content = $lastUserMessage;
 
         $answer = (string)$this->getBot()->answer([$system, $user]);
-        if(stripos($answer, 'allowed') !== 0) {
+        if(stristr($answer, 'forbidden')) {
             $result['error'] = 'I can only talk about magento';
         }
         return $result;
