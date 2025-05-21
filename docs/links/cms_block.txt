@@ -1,0 +1,3 @@
+cms/block
+CMS Blocks
+Manage or create new cms blocks. CMS blocks are used to add a block of static content, and you can then later insert the block into a cms page or a cms widget.

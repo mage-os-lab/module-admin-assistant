@@ -1,0 +1,3 @@
+sales/order
+Orders
+manage orders, you can view order details, edit order, create invoice, create shipment, create credit memo, print invoice, print shipment, print credit memo, print order, send email to customer, send email to admin, send email to customer and admin, send email to customer and admin with invoice, send email to customer and admin with shipment, send email to customer and admin with credit memo

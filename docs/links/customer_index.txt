@@ -1,0 +1,3 @@
+customer/index
+Manage Customers
+manage customers. create new customers and assign to store, manage customer personal information and addresses, reset password for customers, impersonate as customer to manage their account on storefront

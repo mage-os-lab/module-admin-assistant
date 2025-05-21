@@ -1,0 +1,3 @@
+admin/widget_instance
+CMS Widgets
+Manage or create new cms widgets. CMS widgets are used to insert cms block into a specific page or a set of pages at a designed location.

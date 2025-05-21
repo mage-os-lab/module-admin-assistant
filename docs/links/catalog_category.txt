@@ -1,0 +1,3 @@
+catalog/category
+Manage Category
+manage store categories, you can create root category, subcategories, and assign products to categories, you can also manage category display settings, and category permissions, or delete categories

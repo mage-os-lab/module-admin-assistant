@@ -1,0 +1,3 @@
+catalog_rule/promo_catalog
+Catalog Price Rules
+Manage or create new catalog price rules. Catalog price rules are used to apply discounts to products in the catalog. You can create a catalog price rule to apply a discount to a product or a group of products. You can also create a catalog price rule to apply a discount to a product or a group of products based on the customer group. You can also create a catalog price rule to apply a discount to a product or a group of products based on the website.

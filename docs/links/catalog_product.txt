@@ -1,0 +1,3 @@
+catalog/product
+Manage Product
+manage store catalog, you can create products, assign products to categories, manage product attributes, manage product reviews, manage product ratings, manage product tags, manage product categories, manage product images, manage product videos, manage product downloads, manage product samples, manage product stock, manage product prices, manage product special prices, manage product tier prices, manage product custom options, manage product related products, manage product up-sells, manage product cross-sells

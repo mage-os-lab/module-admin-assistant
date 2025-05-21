@@ -1,0 +1,3 @@
+admin/system_config
+System Configuration
+Manage system configuration, you can configure general settings, web settings, design settings, customer settings, sales settings, shipping settings, payment settings, tax settings, catalog settings, catalog search settings, advanced settings, developer settings

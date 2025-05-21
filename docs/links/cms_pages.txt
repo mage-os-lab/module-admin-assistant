@@ -1,0 +1,3 @@
+cms/page
+CMS Pages
+Manage or create new cms pages. CMS pages are used to add a custom static page to the storefront.

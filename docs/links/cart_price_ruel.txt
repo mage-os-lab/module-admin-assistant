@@ -1,0 +1,3 @@
+sales_rule/promo_quote
+Cart Price Rules
+Manage or create new cart price rules. Cart price rules are used to apply discounts to the shopping cart. You can create a cart price rule to apply a discount to the shopping cart based on the customer group. You can also create a cart price rule to apply a discount to the shopping cart based on the website. You can also create a cart price rule to apply a discount to the shopping cart based on the product attributes.

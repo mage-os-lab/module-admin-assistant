@@ -1,0 +1,3 @@
+sales/shipment
+Shipments
+Manage shipments, you can view shipment details, edit shipment, print shipment, send email to customer, send email to admin, send email to customer and admin

@@ -1,0 +1,4 @@
+sales/creditmemo
+Credit Memos
+Manage credit memos, you can view credit memo details, edit credit memo, print credit memo, send email to customer, send email to admin, send email to customer and admin
+Credit Memos are created to refund a customer for a product that was returned. A credit memo is created from an invoice. You can create a credit memo for an entire invoice or for a partial amount. A credit memo can not be created before invoiced.

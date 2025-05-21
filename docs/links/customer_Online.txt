@@ -1,0 +1,3 @@
+customer/online
+Online Customers
+List online customers, you can have a quick view of customer information who are currently logged in to the storefront, you can also see their last activity.
