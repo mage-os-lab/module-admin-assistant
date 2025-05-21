@@ -6,7 +6,10 @@ Combine the power of LLM and domain knowledge to improve admin experience though
 
 ## Configuration
 go to stores -> configuration -> advanced -> admin -> AI Assistant
+
 enable this feature, select your LLM provider and put in the LLM host url and/or API credentials
+
+run `bin/magento assistant:train` to load LLM with magento domain knowledge
 
 ## How to use
 * Click the chatbot icon on left sidebar to open the chatbot UI
