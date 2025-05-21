@@ -36,7 +36,7 @@ interface BotInterface
      * @param $docPath
      * @return self
      */
-    public function learn($docPath): self;
+    public function learn(): self;
 
     /**
      * Get agents to process user request

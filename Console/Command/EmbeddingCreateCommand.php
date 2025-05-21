@@ -48,19 +48,14 @@ class EmbeddingCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->writeln('<info>Embedding catalog documents</info>');
-
-            $docPath = '/var/www/pub/media/docs/merchant/src/test';
-            $output->writeln("<info>Embedding $docPath</info>");
+            $output->writeln('<info>Embedding started</info>');
             $this->bot->reset();
-            $this->bot->learn($docPath);
+            $this->bot->learn();
             $output->writeln("<info>Documents Embedded</info>");
         } catch (LocalizedException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
             return Cli::RETURN_FAILURE;
         }
-
-        $output->writeln('<info>Documents have been embedded and saved</info>');
 
         return Cli::RETURN_SUCCESS;
     }

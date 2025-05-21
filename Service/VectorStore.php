@@ -71,7 +71,7 @@ class VectorStore
         $this->engine->addDocuments($embeddedDocuments);
     }
 
-    public function match(string $message, int $k = 1): array
+    public function match(string $message, int $k = 7): array
     {
         $embeddedMessage = $this->embeddingGenerator->embedText($message);
         return $this->engine->similaritySearch($embeddedMessage, $k);

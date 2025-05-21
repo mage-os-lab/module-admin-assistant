@@ -5,6 +5,7 @@ namespace MageOS\AdminAssistant\Model;
 
 use LLPhant\Query\SemanticSearch\QuestionAnsweringFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Module\Dir;
 use MageOS\AdminAssistant\Api\BotInterface;
 use MageOS\AdminAssistant\Service\VectorStore;
 use Psr\Http\Message\StreamInterface;
@@ -23,6 +24,7 @@ class Bot implements BotInterface
         private VectorStore $vectorStore,
         private LlmFactory $llmFactory,
         private readonly ScopeConfigInterface $scopeConfig,
+        private Dir $moduleDir,
         private array $agents = [],
         private array $callbacks = [],
     ){
@@ -67,7 +69,7 @@ class Bot implements BotInterface
             'embeddingGenerator' => $this->embeddingGenerator,
             'chat' => $this->chat,
         ]);
-        $qa->systemMessageTemplate = $this->systemMessage."\n\n{context}.";
+        $qa->systemMessageTemplate = $this->systemMessage."\n\n{context}. /no_think";
         return $qa->answerQuestionFromChat($messages);
     }
 
@@ -78,8 +80,9 @@ class Bot implements BotInterface
         return $this;
     }
 
-    public function learn($docPath): self
+    public function learn(): self
     {
+        $docPath = $this->moduleDir->getDir('MageOS_AdminAssistant', 'etc').'/../docs/manual';
         //todo config for path
         $this->vectorStore->addDocuments($docPath);
 

@@ -65,7 +65,8 @@ class Sql implements AgentInterface
             $safeguard->role = ChatRole::from('user');
             $safeguard->content = '```sql ' . $sql . ' ``` Is the above mysql query safe to execute and will not modify data or leak critical system, personal or financial information? Just answer yes or no.';
             $answer = (string)$this->getBot()->answer([$safeguard]);
-            if(stripos($answer, 'yes') !== 0) {
+            $this->logger->debug('SQL Safeguard answer: ' . $answer);
+            if(!stristr($answer, 'yes')) {
                 $result['error'] = 'The query was not safe to run, please review the query and execute manually.';
             }
             else {
