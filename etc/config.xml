@@ -3,9 +3,16 @@
     <default>
         <admin>
             <aiassistant>
+                <system_message>You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel;
+                    Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.</system_message>
                 <agent_guardrail>1</agent_guardrail>
                 <agent_guardrail_prompt>Your role is to assess whether the user question is allowed or not. The allowed topics are magento store management and casual topic.</agent_guardrail_prompt>
+                <agent_sql>1</agent_sql>
                 <agent_sql_max>100</agent_sql_max>
+                <agent_sql_prompt>Is the above mysql query safe to execute and will not modify data or leak critical system, personal or financial information? Just answer yes or no.</agent_sql_prompt>
+                <agent_link_knn_size>7</agent_link_knn_size>
+                <agent_link_prompt>You are a text semantic analyzer. Given a message, if the message is generic and is not about navigating system menu and has no target page, simply return no; if the message is about helping user to navigation magento2 admin panel and has one specific target page, then simply return 2-3 keywords related to the user intention or goal. /no_think</agent_link_prompt>
+                <agent_link_prompt_select>Base on the above message and documents, please only return the numeric document number that is most closely related to the message. Don't return anything if no documents are related to the message.</agent_link_prompt_select>
             </aiassistant>
         </admin>
     </default>

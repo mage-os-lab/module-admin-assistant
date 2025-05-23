@@ -23,7 +23,14 @@
                 </field>
                 <field id="model" translate="label comment" type="text" sortOrder="50" showInDefault="1">
                     <label>Model</label>
-                    <comment>The model of the LLM to run, e.g. `llama3.2` for Ollama, `GPT-4o` for OpenAI etc</comment>
+                    <comment>The model of the LLM to run, e.g. `llama3.2` for Ollama, `gpt-4o` for OpenAI etc</comment>
+                </field>
+                <field id="debug" translate="label comment" type="select" sortOrder="60" showInDefault="1">
+                    <label>Debug</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="system_message" translate="label comment" type="textarea" sortOrder="70" showInDefault="1">
+                    <label>System Message</label>
                 </field>
                 <field id="agent_guardrail" translate="label comment" type="select" sortOrder="110" showInDefault="1">
                     <label>Agent - Guardrail</label>
@@ -32,7 +39,6 @@
                 </field>
                 <field id="agent_guardrail_prompt" translate="label comment" type="textarea" sortOrder="120" showInDefault="1">
                     <label>Guardrail Prompt</label>
-                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     <depends>
                         <field id="agent_guardrail">1</field>
                     </depends>
@@ -42,23 +48,43 @@
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     <comment>If conversation involves pulling data with query, provide a button to run the query for users</comment>
                 </field>
-                <field id="agent_sql_max" translate="label comment" type="text" sortOrder="220" showInDefault="1">
+                <field id="agent_sql_prompt" translate="label comment" type="textarea" sortOrder="220" showInDefault="1">
+                    <label>Auto Query Prompt</label>
+                    <depends>
+                        <field id="agent_sql">1</field>
+                    </depends>
+                    <comment>Prompt to assess if SQL is safe to run. SQL will not run if LLM does not respond 'yes'</comment>
+                </field>
+                <field id="agent_sql_max" translate="label comment" type="text" sortOrder="230" showInDefault="1">
                     <label>Max records allowed to Query</label>
                     <depends>
                         <field id="agent_sql">1</field>
                     </depends>
                 </field>
-                <field id="agent_sql_log" translate="label comment" type="select" sortOrder="230" showInDefault="1">
+                <field id="agent_sql_log" translate="label comment" type="select" sortOrder="240" showInDefault="1">
                     <label>Log SQL execution</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="agent_sql">1</field>
                     </depends>
+                    <comment>All SQL queries ran successfully will be logged in var/log/assistant_sql_audit.log for future review</comment>
                 </field>
                 <field id="agent_link" translate="label comment" type="select" sortOrder="310" showInDefault="1">
                     <label>Agent - Smart Link</label>
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     <comment>If conversation involves navigating through admin menu, provide a quick link to the target page directly</comment>
+                </field>
+                <field id="agent_link_prompt" translate="label comment" type="textarea" sortOrder="320" showInDefault="1">
+                    <label>Smart Link Detection Prompt</label>
+                    <comment>Prompt to let LLM determine if the last message in chat should have a page link attached</comment>
+                </field>
+                <field id="agent_link_knn_size" translate="label comment" type="text" sortOrder="330" showInDefault="1">
+                    <label>Knn Search Size</label>
+                    <comment>Number of link document candidate to send to LLM Judge</comment>
+                </field>
+                <field id="agent_link_prompt_select" translate="label comment" type="textarea" sortOrder="340" showInDefault="1">
+                    <label>Smart Link Selecting Prompt</label>
+                    <comment>Prompt to let LLM suggest the best matching document for the target link. It is important to ask LLM to return a numeric number</comment>
                 </field>
             </group>
         </section>
