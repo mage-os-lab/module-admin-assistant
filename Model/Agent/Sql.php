@@ -15,6 +15,10 @@ class Sql implements AgentInterface
     protected $sqlRetry = 0;
     protected $bot;
 
+    public const PATH_PROMPT_SQL_SAFETY = 'admin/aiassistant/agent_sql_safety_prompt';
+    public const PATH_FLAG_AGENT_SQL = 'admin/aiassistant/agent_sql';
+    public const PATH_FLAG_AGENT_SQL_LIMIT = 'admin/aiassistant/agent_sql_limit';
+
     public function __construct(
         private readonly \Magento\Framework\App\ResourceConnection $resourceConnection,
         private readonly \MageOS\AdminAssistant\Model\TextTableFactory $textTableFactory,
@@ -26,7 +30,7 @@ class Sql implements AgentInterface
 
     public function isEnabled(): bool
     {
-        return $this->scopeConfig->isSetFlag('admin/aiassistant/agent_sql');
+        return $this->scopeConfig->isSetFlag(self::PATH_FLAG_AGENT_SQL);
     }
 
     public function setBot($bot): void
@@ -55,7 +59,7 @@ class Sql implements AgentInterface
             $sql = $matches[1][0];
         }
 
-        $limit = $this->scopeConfig->getValue('admin/aiassistant/agent_sql_limit');
+        $limit = $this->scopeConfig->getValue(self::PATH_FLAG_AGENT_SQL_LIMIT);
         if($limit && !stristr($sql, ' limit ')) {
             $sql .= ' limit ' . $limit;
         }
@@ -65,7 +69,7 @@ class Sql implements AgentInterface
         elseif($sql) {
             $safeguard = $this->messageFactory->create();
             $safeguard->role = ChatRole::from('user');
-            $safeguard->content = '```sql ' . $sql . ' ``` Is the above mysql query safe to execute and will not modify data or leak critical system, personal or financial information? Just answer yes or no.';
+            $safeguard->content = '```sql ' . $sql . ' ``` ' . $this->scopeConfig->getValue(self::PATH_PROMPT_SQL_SAFETY);
             $answer = (string)$this->getBot()->answer([$safeguard]);
             $this->logger->debug('SQL Safeguard answer: ' . $answer);
             if(!stristr($answer, 'yes')) {

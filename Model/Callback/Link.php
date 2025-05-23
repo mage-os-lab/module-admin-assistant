@@ -19,6 +19,11 @@ class Link implements CallbackInterface
 
     protected $bot;
 
+    public const PATH_FLAG_AGENT_LINK = 'admin/aiassistant/agent_link';
+    public const PATH_FLAG_AGENT_LINK_LIMIT = 'admin/aiassistant/agent_link_limit';
+    public const PATH_FLAG_AGENT_LINK_PROMPT = 'admin/aiassistant/agent_link_prompt';
+    public const PATH_FLAG_AGENT_LINK_PROMPT_SELECT = 'admin/aiassistant/agent_link_prompt_select';
+
     public function __construct(
         private readonly \Magento\Framework\App\ResourceConnection $resourceConnection,
         private readonly \MageOS\AdminAssistant\Model\TextTableFactory $textTableFactory,
@@ -34,7 +39,7 @@ class Link implements CallbackInterface
 
     public function isEnabled(): bool
     {
-        return $this->scopeConfig->isSetFlag('admin/aiassistant/agent_link');
+        return $this->scopeConfig->isSetFlag(self::PATH_FLAG_AGENT_LINK);
     }
 
     public function setBot($bot): void
@@ -53,7 +58,7 @@ class Link implements CallbackInterface
 
         $llmChat = $this->llmFactory->createChat();
 
-        $llmChat->setSystemMessage('You are a text semantic analyzer. Given a message, if the message is generic and is not about navigating system menu and has no target page, simply return no; if the message is about helping user to navigation magento2 admin panel and has one specific target page, then simply return 2-3 keywords related to the user intention or goal. /no_think');
+        $llmChat->setSystemMessage(self::PATH_FLAG_AGENT_LINK_PROMPT);
 
         //TODO use a new bot instance with custom system prompt
         $abstractedMessage = $llmChat->generateText($data);
@@ -82,7 +87,8 @@ class Link implements CallbackInterface
         $link = [];
         $vectorStore = $this->vectorStore->load(self::INDEX);
         if($message) {
-            $documents = $vectorStore->match($message);
+            $k = (int)$this->scopeConfig->getValue(self::PATH_FLAG_AGENT_LINK_LIMIT);
+            $documents = $vectorStore->match($message, $k?:7);
             if($documents) {
                 // knn + llm to get the best match, knn score along is often not enough
                 $this->getBestMatch($documents, $message);
@@ -109,7 +115,7 @@ class Link implements CallbackInterface
         foreach ($documents as $document) {
             $prompt .= 'document number ' . $i++ . ': '. $document->content . "\n";
         }
-        $prompt .= " /n based on the above message and documents, please only return the numeric document number that is most closely related to the message. Don't return anything if no documents are related to the message.";
+        $prompt .= " /n " . $this->scopeConfig->getValue(self::PATH_FLAG_AGENT_LINK_PROMPT_SELECT);
         $this->logger->debug('Suggested prompt: ' . $prompt);
         $respond = $llmChat->generateText($prompt);
         $docNum = 0;

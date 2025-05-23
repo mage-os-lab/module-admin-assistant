@@ -19,6 +19,11 @@ class Bot implements BotInterface
     protected $client;
     protected $systemMessage;
 
+    public const PATH_PROMPT_SYSTEM = 'admin/aiassistant/system_message';
+    public const PATH_SQL_PROMPT_SYSTEM = 'admin/aiassistant/agent_sql_prompt_system';
+
+    public const PATH_FLAG_AGENT_SQL = 'admin/aiassistant/agent_sql';
+
     public function __construct(
         private QuestionAnsweringFactory $questionAnsweringFactory,
         private VectorStore $vectorStore,
@@ -29,10 +34,10 @@ class Bot implements BotInterface
         private array $callbacks = [],
     ){
         $this->chat = $this->llmFactory->createChat();
-        $this->systemMessage = 'You are an assistant to guide the user through the process of managing a magento2 ecommerce store using the magento admin panel; User is already logged in admin panel; Keep the response simple short and clear; Ask user for more details or clarification before you are confident with the answer.';
+        $this->systemMessage = $this->scopeConfig->getValue(self::PATH_PROMPT_SYSTEM);
         //TODO: decouple - attach additional prompt with agents
-        if($this->scopeConfig->isSetFlag('admin/aiassistant/agent_sql')) {
-            $this->systemMessage .= 'Write a mysql query if the user question is data related, SQL is always preferred when applicable, no confirmation is needed.';
+        if($this->scopeConfig->isSetFlag(self::PATH_FLAG_AGENT_SQL)) {
+            $this->systemMessage .= "\n\n" . $this->scopeConfig->getValue(self::PATH_SQL_PROMPT_SYSTEM);
         }
         $this->chat->setSystemMessage($this->systemMessage);
 

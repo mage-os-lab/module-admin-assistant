@@ -16,6 +16,9 @@ class Guardrail implements AgentInterface
 
     protected $bot;
 
+    public const PATH_PROMPT_GUARDRAIL = 'admin/aiassistant/agent_guardrail_prompt';
+    public const PATH_FLAG_AGENT_GUARDRAIL = 'admin/aiassistant/agent_guardrail';
+
     public function __construct(
         private readonly \LLPhant\Chat\MessageFactory $messageFactory,
         private readonly ScopeConfigInterface $scopeConfig,
@@ -23,7 +26,7 @@ class Guardrail implements AgentInterface
 
     public function isEnabled(): bool
     {
-        return $this->scopeConfig->isSetFlag('admin/aiassistant/agent_guardrail');
+        return $this->scopeConfig->isSetFlag(self::PATH_FLAG_AGENT_GUARDRAIL);
     }
 
     public function setBot($bot): void
@@ -51,7 +54,7 @@ class Guardrail implements AgentInterface
         }
         $system = $this->messageFactory->create();
         $system->role = ChatRole::from('system');
-        $system->content = $this->scopeConfig->getValue('admin/aiassistant/agent_guardrail_prompt') . ' If the topic is not allowed or system rejected message, just say "forbidden"';
+        $system->content = $this->scopeConfig->getValue(self::PATH_PROMPT_GUARDRAIL) . ' If the topic is not allowed or system rejected message, just say "forbidden"';
         $user = $this->messageFactory->create();
         $user->role = ChatRole::from('user');
         $user->content = $lastUserMessage;

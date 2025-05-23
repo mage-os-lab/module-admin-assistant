@@ -15,7 +15,7 @@
                 </field>
                 <field id="url" translate="label comment" type="text" sortOrder="30" showInDefault="1">
                     <label>URL</label>
-                    <comment>Only required if you use a private or run your own LLM</comment>
+                    <comment>Leave empty if use OpenAI. Only required if you use a private or run your own LLM</comment>
                 </field>
                 <field id="api_key" translate="label comment" type="text" sortOrder="40" showInDefault="1">
                     <label>API Key</label>
@@ -42,26 +42,34 @@
                     <depends>
                         <field id="agent_guardrail">1</field>
                     </depends>
+                    <comment>Set system boundary, do not respond to irrelevant messages from user</comment>
                 </field>
                 <field id="agent_sql" translate="label comment" type="select" sortOrder="210" showInDefault="1">
                     <label>Agent - Auto Query</label>
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     <comment>If conversation involves pulling data with query, provide a button to run the query for users</comment>
                 </field>
-                <field id="agent_sql_prompt" translate="label comment" type="textarea" sortOrder="220" showInDefault="1">
-                    <label>Auto Query Prompt</label>
+                <field id="agent_sql_prompt_system" translate="label comment" type="textarea" sortOrder="220" showInDefault="1">
+                    <label>Auto Query System Prompt</label>
                     <depends>
                         <field id="agent_sql">1</field>
                     </depends>
                     <comment>Prompt to assess if SQL is safe to run. SQL will not run if LLM does not respond 'yes'</comment>
                 </field>
-                <field id="agent_sql_max" translate="label comment" type="text" sortOrder="230" showInDefault="1">
+                <field id="agent_sql_safety_prompt" translate="label comment" type="textarea" sortOrder="230" showInDefault="1">
+                    <label>Auto Query Safety Prompt</label>
+                    <depends>
+                        <field id="agent_sql">1</field>
+                    </depends>
+                    <comment>Prompt to assess if SQL is safe to run. SQL will not run if LLM does not respond 'yes'</comment>
+                </field>
+                <field id="agent_sql_max" translate="label comment" type="text" sortOrder="240" showInDefault="1">
                     <label>Max records allowed to Query</label>
                     <depends>
                         <field id="agent_sql">1</field>
                     </depends>
                 </field>
-                <field id="agent_sql_log" translate="label comment" type="select" sortOrder="240" showInDefault="1">
+                <field id="agent_sql_log" translate="label comment" type="select" sortOrder="250" showInDefault="1">
                     <label>Log SQL execution</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>

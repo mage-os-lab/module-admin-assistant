@@ -37,7 +37,7 @@ class LogHandler extends \Magento\Framework\Logger\Handler\Base
 
     public function isHandling(LogRecord $record): bool
     {
-        if(!$this->scopeConfig->isSetFlag('admin/aiassistant/agent_sql_audit')) {
+        if(!$this->scopeConfig->isSetFlag('admin/aiassistant/agent_sql_log')) {
             return false;
         }
 
