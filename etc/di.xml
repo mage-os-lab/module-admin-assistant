@@ -21,4 +21,12 @@
             </argument>
         </arguments>
     </type>
+    <type name="MageOS\AdminAssistant\Model\Agent\Sql\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">sqlAgentLogger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">MageOS\AdminAssistant\Model\Agent\Sql\LogHandler</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

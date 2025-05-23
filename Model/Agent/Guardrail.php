@@ -45,6 +45,10 @@ class Guardrail implements AgentInterface
                 $lastUserMessage = $message->content;
             }
         }
+        //TODO: abstract this bypassing with callbacks
+        if($lastUserMessage == 'Run Query') {
+            return $result;
+        }
         $system = $this->messageFactory->create();
         $system->role = ChatRole::from('system');
         $system->content = $this->scopeConfig->getValue('admin/aiassistant/agent_guardrail_prompt') . ' If the topic is not allowed or system rejected message, just say "forbidden"';

@@ -7,6 +7,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Psr\Log\LoggerInterface;
 use MageOS\AdminAssistant\Api\AgentInterface;
 use MageOS\AdminAssistant\Api\BotInterface;
+use MageOS\AdminAssistant\Model\Agent\Sql\Logger as SqlLogger;
 
 class Sql implements AgentInterface
 {
@@ -19,7 +20,8 @@ class Sql implements AgentInterface
         private readonly \MageOS\AdminAssistant\Model\TextTableFactory $textTableFactory,
         private readonly \LLPhant\Chat\MessageFactory $messageFactory,
         private readonly ScopeConfigInterface $scopeConfig,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly SqlLogger $sqlLogger
     ) {}
 
     public function isEnabled(): bool
@@ -78,10 +80,9 @@ class Sql implements AgentInterface
                     $result = [
                         'text' => $tt->render(),
                     ];
-                    $this->logSql($sql);
+                    $this->sqlLogger->info($sql);
                 }
                 catch(\Exception $e) {
-                    $this->logger->info($e->getMessage());
                     // TODO: no need for question answering, a chat method is good enough
                     $autofix = $this->messageFactory->create();
                     $autofix->role = ChatRole::from('user');
@@ -93,13 +94,5 @@ class Sql implements AgentInterface
 
         }
         return $result;
-    }
-
-    public function logSql($sql): void
-    {
-        if($this->scopeConfig->isSetFlag('admin/aiassistant/agent_sql_log')) {
-            $this->logger->info($sql);
-        }
-        $this->logger->info('SQL query executed');
     }
 }

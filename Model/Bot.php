@@ -39,6 +39,7 @@ class Bot implements BotInterface
         $this->vectorStore->load(self::INDEX_NAME);
         $this->embeddingGenerator = $this->llmFactory->createEmbedding();
 
+        //TODO: decouple - most of agents and callbacks do not require a bot model, a general LLM instance is sufficient
         foreach ($this->agents as $agent) {
             $agent->setBot($this);
         }
