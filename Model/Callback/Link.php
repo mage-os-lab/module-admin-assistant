@@ -65,8 +65,8 @@ class Link implements CallbackInterface
         $this->logger->debug('Abstracted message: ' . $abstractedMessage);
         if(stripos($abstractedMessage, 'no') !== 0) {
             if($link = $this->getLink($abstractedMessage)) {
-                $result = ['html' => '<div class="deep-chat-temporary-message"><a href="' . $link['url'] . '" class="deep-chat-button" style="border: 1px solid green">' .
-                    $this->escaper->escapeHtml($link['title']) . '</a></div>'];
+                $result = ['html' => '<a href="' . $link['url'] . '" class="deep-chat-button" style="border: 1px solid green">' .
+                    $this->escaper->escapeHtml($link['title']) . '</a>'];
             }
         }
 

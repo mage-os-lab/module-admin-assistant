@@ -48,10 +48,17 @@ class Chat extends \Magento\Backend\App\Action implements HttpPostActionInterfac
         $messages = [];
         $result = [];
         foreach ($post['messages'] ?? [] as $postMessage) {
-            $message = $this->messageFactory->create();
-            $message->role = ChatRole::from($postMessage['role'] === 'user' ? 'user' : 'assistant'); // TODO use a custom role class
-            $message->content = $postMessage['text'];
-            $messages[] = $message;
+            $role = match($postMessage['role']) {
+                'user' => ChatRole::User,
+                'ai' => ChatRole::Assistant,
+                default => false,
+            };
+            if($role) {
+                $message = $this->messageFactory->create();
+                $message->role = $role;
+                $message->content = $postMessage['text'];
+                $messages[] = $message;
+            }
         }
 
         $agentMatched = false;
