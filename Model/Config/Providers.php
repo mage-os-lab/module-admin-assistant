@@ -12,7 +12,7 @@ class Providers implements \Magento\Framework\Option\ArrayInterface
     //@todo: add OpenAI
     public CONST OPENAI = 'openai';
     public CONST OLLAMA = 'ollama';
-    public CONST ANTHROPIC = 'anthropic';
+
     /**
      * Options getter
      *
@@ -36,7 +36,6 @@ class Providers implements \Magento\Framework\Option\ArrayInterface
         return [
             Providers::OLLAMA => __('Ollama'),
             Providers::OPENAI => __('OpenAI'),
-            Providers::ANTHROPIC => __('Anthropic (coming soon)'),
         ];
     }
 }
