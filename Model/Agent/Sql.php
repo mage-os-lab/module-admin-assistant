@@ -77,7 +77,7 @@ class Sql implements AgentInterface
             }
             else {
                 $connection = $this->resourceConnection->getConnection();
-                $connection->beginTransaction();
+                $connection->query('SET TRANSACTION READ ONLY');
                 try {
                     $result = $connection->fetchAll($sql);
                     $tt = $this->textTableFactory->create(['header' => null, 'content'=> $result]);
