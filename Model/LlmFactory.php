@@ -62,7 +62,7 @@ class LlmFactory
             $embedding = $this->openaiEmbeddingGeneratorFactory->create(['config' => $this->openAIConfig]);
         }
         else {
-            throw new InvalidArgumentException(__('%s is not supported', $provider));
+            throw new InvalidArgumentException(__('Please configure LLM Provider'));
         }
         return match($type) {
             'chat' => $chat,
