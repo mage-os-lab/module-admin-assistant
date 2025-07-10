@@ -6,7 +6,7 @@ namespace MageOS\AdminAssistant\Console\Command;
 use LLPhant\Embeddings\DocumentSplitter\DocumentSplitter;
 use LLPhant\Embeddings\EmbeddingFormatter\EmbeddingFormatter;
 use Magento\Framework\Exception\LocalizedException;
-use MageOS\AdminAssistant\Api\BotInterface;
+use MageOS\AdminAssistant\Api\BotInterface\Proxy as BotInterfaceProxy;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +21,7 @@ class EmbeddingCreateCommand extends Command
 
     public function __construct(
         private FileDataReaderFactory $fileDataReaderFactory,
-        private BotInterface $bot,
+        private BotInterfaceProxy $bot,
     ) {
         parent::__construct();
     }
