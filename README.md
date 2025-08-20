@@ -14,9 +14,11 @@ This project revolutionizes Magento 2 admin interactions with cutting-edge AI ca
 - **🔗 Smart Link:** Automatically suggest relative link and redirect users base on their questions with one click.
 
 ## How to install
-`composer require mageos/module-admin-assist`
+
+`composer require mage-os/module-admin-assist`
 
 ## Configuration
+
 go to stores -> configuration -> advanced -> admin -> AI Assistant
 
 enable this feature, select your LLM provider and put in the LLM host url and/or API credentials
@@ -24,6 +26,7 @@ enable this feature, select your LLM provider and put in the LLM host url and/or
 run `bin/magento assistant:train` to load LLM with magento domain knowledge
 
 ## How to use
-* Click the chatbot icon on left sidebar to open the chatbot UI
-* Ask questions
-* Get answers
+
+- Click the chatbot icon on left sidebar to open the chatbot UI
+- Ask questions
+- Get answers
