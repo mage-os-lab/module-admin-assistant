@@ -1,5 +1,5 @@
 {
-    "name": "mageos/module-admin-assist",
+    "name": "mage-os/module-admin-assist",
     "description": "Combine the power of LLM and domain knowledge to improve admin experience though a chatbot UI.",
     "type": "magento2-module",
     "license": [
